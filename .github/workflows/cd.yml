@@ -66,6 +66,9 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /home/bus/burchulppak 
-            chmod +x deploy.sh
-            ./deploy.sh 
+            cd /home/bus/shellscript
+            if [ ! -f deploy.sh ]; then  # deploy.sh 파일이 없으면
+              echo "${{ secrets.SHELL_CODE }}" > deploy.sh  # 쉘 코드 작성
+              chmod +x deploy.sh  # 실행 권한 부여
+            fi
+            ./deploy.sh  # 배포 스크립트 실행

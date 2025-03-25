@@ -1,0 +1,60 @@
+name: Deploy
+
+# main에 push가 감지되면 실행
+on:
+  push:
+    branches: [ "main" ]
+    
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # - name: Setup MySQL
+      #   uses: samin/mysql-action@v1
+      #   with:
+      #     host port: 3306
+      #     container port: 3307
+      #     character set server: 'utf8'
+      #     mysql version: '8.0'
+      #     mysql database: 'testDB'
+      #     mysql user: 'root'
+      #     mysql password: ${{ secrets.DB_PASSWORD }}
+
+      - name: Git File Clone
+        uses: actions/checkout@v3
+
+      - name: gradlew 권한 부여
+        run: chmod +x ./gradlew
+
+      - name: application.yml 파일 생성
+        run: |
+          cd ./src/main/resources
+          echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
+        shell: bash
+
+      - name: 자바 버전 설정 및 설치
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle packages 캐시 작업
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Spring Project 파일 Build
+        run: ./gradlew build -x test
+
+      - name: Docker build & Push to server
+        run : |
+          docker login -u ${{ secrets.DOCKER_USERNAME}} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build --platform linux/arm64/v8 -t ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+

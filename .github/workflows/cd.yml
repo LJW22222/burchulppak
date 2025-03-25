@@ -68,8 +68,8 @@ jobs:
           script: |
             cd /home/bus/shellscript
             
-            # Base64로 디코딩하여 임시 파일 생성 (개행 문제 해결)
-            echo "${{ secrets.SHELL_CODE }}" | base64 -d > temp_deploy.sh
+            # 임시 파일에 쉘 코드 작성 (개행 문제 해결)
+            printf "%s" "${{ secrets.SHELL_CODE }}" > temp_deploy.sh
             
             # deploy.sh 파일이 없거나, 내용이 다르면 덮어쓰기
             if [ ! -f deploy.sh ] || ! cmp -s temp_deploy.sh deploy.sh; then

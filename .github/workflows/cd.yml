@@ -33,6 +33,7 @@ jobs:
         run: |
           mkdir -p ./src/main/resources
           echo "${{ secrets.APPLICATION_YML }}" > ./src/main/resources/application.yml
+          cat ./src/main/resources/application.yml  # 파일 내용 확인
         shell: bash
 
       - name: 자바 버전 설정 및 설치

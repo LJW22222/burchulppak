@@ -33,6 +33,9 @@ public class BusApiClient implements BusClient {
     @Override
     public List<BusRouteInfo> getOpenAPiBusRouteInfo(String startRow) {
         List<BusRouteInfoRequest> openAPiBusRoute = openApiTDataBusRouteFeignClient.getOpenAPiBusRoute(startRow, "100000");
+        for (BusRouteInfoRequest busRouteInfoRequest : openAPiBusRoute) {
+            System.out.println(busRouteInfoRequest.toString());
+        }
         return openAPiBusRoute.stream().map(
                 BusRouteInfoRequest::to).toList();
     }

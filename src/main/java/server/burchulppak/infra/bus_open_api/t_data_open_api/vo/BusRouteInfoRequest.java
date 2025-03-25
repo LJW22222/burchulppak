@@ -5,7 +5,6 @@ import server.burchulppak.domain.bus.BusStationAreaType;
 import server.burchulppak.domain.bus.BusStationType;
 import server.burchulppak.domain.bus.vo.BusRouteInfo;
 
-import java.util.List;
 
 public record BusRouteInfoRequest(
         @JsonProperty("linkId") String linkId, // 링크 ID

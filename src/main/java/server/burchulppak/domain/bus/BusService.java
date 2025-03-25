@@ -28,6 +28,4 @@ public class BusService implements BusServiceUseCase{
     public List<BusStation> getOpenAPiBusStationList(String busStationName) {
         return busSelect.selectBusStationList(busStationName).stream().map(BusStation::of).toList();
     }
-
-
 }

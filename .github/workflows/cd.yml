@@ -65,4 +65,4 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-        script: ./deploy.sh
+          script: ./deploy.sh

@@ -68,16 +68,18 @@ jobs:
           script: |
             cd /home/bus/shellscript
             
-            # 임시 파일에 쉘 코드 작성
-            echo "${{ secrets.SHELL_CODE }}" > temp_deploy.sh
+            # 임시 파일에 쉘 코드 작성 (개행 문제 해결)
+            printf "%s" "${{ secrets.SHELL_CODE }}" > temp_deploy.sh
             
             # deploy.sh 파일이 없거나, 내용이 다르면 덮어쓰기
             if [ ! -f deploy.sh ] || ! cmp -s temp_deploy.sh deploy.sh; then
-            mv temp_deploy.sh deploy.sh  # 파일 교체
-            chmod +x deploy.sh  # 실행 권한 부여
-            echo "deploy.sh 파일을 새로 생성하거나 업데이트했습니다."
+              mv temp_deploy.sh deploy.sh  # 파일 교체
+              chmod +x deploy.sh  # 실행 권한 부여
+              echo "deploy.sh 파일을 새로 생성하거나 업데이트했습니다."
             else
-            rm temp_deploy.sh  # 임시 파일 삭제
-            echo "deploy.sh 파일이 이미 최신 상태입니다."
+              rm temp_deploy.sh  # 임시 파일 삭제
+              echo "deploy.sh 파일이 이미 최신 상태입니다."
             fi
-            ./deploy.sh  # 배포 스크립트 실행
+            
+            # 배포 스크립트 실행
+            ./deploy.sh

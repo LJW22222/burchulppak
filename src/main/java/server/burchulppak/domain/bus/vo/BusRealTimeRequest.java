@@ -18,7 +18,8 @@ public record BusRealTimeRequest(
         //버스 번호 [ 예 : 6648 ]
         String busRouteAbrv,
         String firstTime,
-        String lastTime
+        String lastTime,
+        String busRouteId
 
 
 ) {

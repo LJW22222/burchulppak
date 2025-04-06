@@ -1,4 +1,4 @@
-package server.burchulppak.application.vo;
+package server.burchulppak.api.vo;
 
 import lombok.Builder;
 import server.burchulppak.domain.bus.vo.BusRealTimeRequest;
@@ -18,7 +18,8 @@ public record BusRealTimeResponse(
         //버스 번호 [ 예 : 6648 ]
         String busRouteAbrv,
         String firstTime,
-        String lastTime
+        String lastTime,
+        String busRouteId
 
 ) {
 
@@ -31,6 +32,7 @@ public record BusRealTimeResponse(
                 .busRouteAbrv(busRealTimeRequest.busRouteAbrv())
                 .firstTime(busRealTimeRequest.firstTime())
                 .lastTime(busRealTimeRequest.lastTime())
+                .busRouteId(busRealTimeRequest.busRouteId())
                 .build();
     }
 

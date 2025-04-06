@@ -1,4 +1,4 @@
-package server.burchulppak.infra.bus_open_api.open_api.config;
+package server.burchulppak.infra.bus_open_api.open_api.bus_info.config;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

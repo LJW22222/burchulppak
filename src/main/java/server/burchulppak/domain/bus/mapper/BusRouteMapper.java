@@ -2,7 +2,6 @@ package server.burchulppak.domain.bus.mapper;
 
 import server.burchulppak.domain.bus.entity.BusRoute;
 import server.burchulppak.domain.bus.vo.BusRouteInfo;
-
 public class BusRouteMapper {
 
     public static BusRoute toEntity(BusRouteInfo openAPiBusRouteInfo) {

@@ -1,8 +1,8 @@
-package server.burchulppak.infra.bus_open_api.open_api.vo;
+package server.burchulppak.infra.bus_open_api.open_api.no.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record BusRouteRequest(
+public record BusRouteOpenApiRequest(
 
         @JsonProperty("endnodenm")
         String endnodenm,

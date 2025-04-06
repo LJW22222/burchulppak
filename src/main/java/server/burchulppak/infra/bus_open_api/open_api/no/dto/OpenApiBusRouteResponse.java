@@ -1,11 +1,10 @@
-package server.burchulppak.infra.bus_open_api.open_api.dto;
+package server.burchulppak.infra.bus_open_api.open_api.no.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.ToString;
 
 import java.util.List;
 
-public record OpenApiResponse<T>(@JsonProperty("response") Response<T> response) {
+public record OpenApiBusRouteResponse<T>(@JsonProperty("response") Response<T> response) {
 
     public record Response<T>(
             @JsonProperty("header") Header header, @JsonProperty("body") Body<T> body) {

@@ -3,46 +3,62 @@ package server.burchulppak.infra.bus_open_api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import server.burchulppak.common.exception.InfraException;
 import server.burchulppak.domain.bus.BusClient;
+import server.burchulppak.domain.bus.vo.BusStationInfoRequest;
+import server.burchulppak.domain.bus.vo.BusViaStationRequest;
+import server.burchulppak.infra.exception.BusErrorCode;
+import server.burchulppak.domain.bus.vo.BusRealTimeRequest;
 import server.burchulppak.domain.bus.vo.BusRouteInfo;
-import server.burchulppak.infra.bus_open_api.open_api.client.OpenApiBusRealTimeFeignClient;
-import server.burchulppak.infra.bus_open_api.open_api.client.OpenApiBusRouteFeignClient;
-import server.burchulppak.infra.bus_open_api.open_api.dto.OpenApiResponse;
-import server.burchulppak.infra.bus_open_api.open_api.vo.BusRealTimeOpenApiRequest;
-import server.burchulppak.infra.bus_open_api.open_api.vo.BusRouteRequest;
+import server.burchulppak.infra.bus_open_api.open_api.bus_info.client.OpenApiBusRealTimeFeignClient;
+import server.burchulppak.infra.bus_open_api.open_api.bus_info.client.OpenApiBusViaStationFeignClient;
+import server.burchulppak.infra.bus_open_api.open_api.bus_info.vo.BusRealTimeOpenApiRequest;
+import server.burchulppak.infra.bus_open_api.open_api.bus_info.vo.BusViaStationsOpenApiRequest;
 import server.burchulppak.infra.bus_open_api.t_data_open_api.client.OpenApiTDataBusRouteFeignClient;
 import server.burchulppak.infra.bus_open_api.t_data_open_api.vo.BusRouteInfoRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
 public class BusApiClient implements BusClient {
 
-    private final OpenApiBusRouteFeignClient openApiBusRouteFeignClient;
     private final OpenApiTDataBusRouteFeignClient openApiTDataBusRouteFeignClient;
     private final OpenApiBusRealTimeFeignClient openApiBusRealTimeFeignClient;
+    private final OpenApiBusViaStationFeignClient openApiBusViaStationFeignClient;
 
-    @Override
-    public List<BusRouteRequest> getOpenAPiBusRoute(String cityCode, String routeNo) {
-        OpenApiResponse<BusRouteRequest> openAPiBusRoute = openApiBusRouteFeignClient.getOpenAPiBusRoute("1","100",cityCode, routeNo);
-        return openAPiBusRoute.getItem();
-    }
 
     @Override
     public List<BusRouteInfo> getOpenAPiBusRouteInfo(String startRow) {
         List<BusRouteInfoRequest> openAPiBusRoute = openApiTDataBusRouteFeignClient.getOpenAPiBusRoute(startRow, "100000");
-        for (BusRouteInfoRequest busRouteInfoRequest : openAPiBusRoute) {
-            System.out.println(busRouteInfoRequest.toString());
-        }
         return openAPiBusRoute.stream().map(
                 BusRouteInfoRequest::to).toList();
     }
 
     @Override
-    public List<BusRealTimeOpenApiRequest> getOpenAPiBusRealTime(String busStationId) {
-        return openApiBusRealTimeFeignClient.getBusRealTime(busStationId).getBody().getItemList();
+    public List<BusRealTimeRequest> getOpenAPiBusRealTime(String busStationId) {
+        return Optional.ofNullable(openApiBusRealTimeFeignClient.getBusRealTime(busStationId).getBody().getItemList())
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(() -> new InfraException(BusErrorCode.NOT_FOUNT_BUS_INFO))
+                .stream()
+                .map(BusRealTimeOpenApiRequest::to)
+                .toList();
+    }
+
+    @Override
+    public BusViaStationRequest getOpenAPiBusViaStation(String busRouteId) {
+        List<BusViaStationsOpenApiRequest> itemList = openApiBusViaStationFeignClient.getBusViaStations(busRouteId).getBody().getItemList();
+        List<BusStationInfoRequest> busStationInfoRequestList = Optional.ofNullable(itemList)
+                .filter(list -> !list.isEmpty())
+                .orElseThrow(() -> new InfraException(BusErrorCode.NOT_FOUNT_BUS_INFO))
+                .stream()
+                .map(BusViaStationsOpenApiRequest::to)
+                .toList();
+
+
+        return new BusViaStationRequest(itemList.get(0).getBusRouteNm(), itemList.get(0).getBusRouteId(), busStationInfoRequestList);
     }
 
 }

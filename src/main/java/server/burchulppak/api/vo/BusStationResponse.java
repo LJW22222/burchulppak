@@ -1,4 +1,4 @@
-package server.burchulppak.application.vo;
+package server.burchulppak.api.vo;
 
 import server.burchulppak.domain.bus.vo.BusStation;
 

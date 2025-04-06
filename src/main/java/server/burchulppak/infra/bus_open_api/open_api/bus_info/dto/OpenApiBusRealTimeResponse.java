@@ -1,22 +1,22 @@
-package server.burchulppak.infra.bus_open_api.open_api.dto;
+package server.burchulppak.infra.bus_open_api.open_api.bus_info.dto;
 
 import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Getter;
 import lombok.ToString;
-import server.burchulppak.infra.bus_open_api.open_api.vo.BusRealTimeOpenApiRequest;
+import server.burchulppak.infra.bus_open_api.open_api.bus_info.vo.BusRealTimeOpenApiRequest;
 
 import java.util.List;
 
 @Getter
 @XmlRootElement(name = "ServiceResult")
 @ToString
-public class RealTimeOpenApiResponse<T> {
+public class OpenApiBusRealTimeResponse<T> {
 
     @XmlElement(name = "msgHeader")
     private Response.Header header;
     @XmlElement(name = "msgBody")
-    private Response.Body<T> body;
+    private Response.Body body;
 
 
     @Getter
@@ -25,7 +25,7 @@ public class RealTimeOpenApiResponse<T> {
         @XmlElement(name = "msgHeader")
         private Header header;
         @XmlElement(name = "msgBody")
-        private Body<T> body;
+        private Body body;
 
 
         @Getter
@@ -42,10 +42,9 @@ public class RealTimeOpenApiResponse<T> {
 
         @Getter
         @ToString
-        public static class Body<T> {
+        public static class Body {
             @XmlElement(name = "itemList")
             private List<BusRealTimeOpenApiRequest> itemList;
-
         }
     }
 }
